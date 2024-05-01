@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Immersive Data Visualization</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- Camera rig for flexible viewing -->
+        <a-entity id="rig" position="0 6 10">
+            <a-camera look-controls enabled="true"></a-camera>
+        </a-entity>
+
+        <!-- Lighting for enhanced visual appearance -->
+        <a-light type="ambient" color="#555"></a-light>
+        <a-light type="directional" color="#FFF" intensity="0.6" position="0 3 5"></a-light>
+
+        <!-- Background and floor setup -->
+        <a-sky color="#333"></a-sky>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="15" height="15" color="#1a1a1a"></a-plane>
+    </a-scene>
+
+    <script>
+        // Define JSON data in a matrix format
+        const matrixData = [
+            [{ value: 80, color: "#ff3333" }, { value: 65, color: "#ff8333" }, { value: 50, color: "#ffd133" }, { value: 35, color: "#d1ff33" }],
+            [{ value: 70, color: "#33ffad" }, { value: 55, color: "#33c8ff" }, { value: 40, color: "#3382ff" }, { value: 25, color: "#6a33ff" }],
+            [{ value: 60, color: "#ff33ab" }, { value: 45, color: "#ff3383" }, { value: 30, color: "#ff3352" }, { value: 15, color: "#ff3333" }],
+            [{ value: 50, color: "#bf33ff" }, { value: 35, color: "#8033ff" }, { value: 20, color: "#4d33ff" }, { value: 5, color: "#3344ff" }]
+        ];
+
+        // Using D3 to process data and create elements
+        d3.select('a-scene').selectAll('a-box')
+            .data([].concat.apply([], matrixData)) // Flatten the matrix for D3 processing
+            .enter().append('a-box')
+            .attr('position', (d, i) => {
+                const row = Math.floor(i / 4);
+                const col = i % 4;
+                return `${(col * 2) - 3} ${d.value * 0.05} ${(row * 2) - 3}`; // Ensure proper spacing
+            })
+            .attr('rotation', '0 0 0')
+            .attr('height', d => d.value * 0.1) // Scale the height
+            .attr('width', '1')
+            .attr('depth', '1')
+            .attr('color', d => d.color);
+
+
+    </script>
+</body>
+</html>
